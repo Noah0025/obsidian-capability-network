@@ -50,17 +50,19 @@ CONCEPTS   = $VAULT/Concepts
 - 新 Field 未引用 → 补入 **真实链接** + 在知识框架叙述中补一句说明
 
 ### 1b. 量化数据表
-重新生成或更新量化统计表：
+量化表用自动生成标记包裹，更新时只替换此区块，不影响区块外的用户内容：
 
 ```markdown
+<!-- AUTO-GENERATED:START — 由 obsidian-overview-update 维护，请勿手动编辑此区块 -->
 | Field | 概念卡数 | 来源数 |
 |-------|---------|--------|
 | Field_Name | N | N |
 | ...   | ...     | ...    |
 | **总计** | **N** | **N** |
+<!-- AUTO-GENERATED:END -->
 ```
 
-结构特征更新：
+结构特征更新（同样用 AUTO-GENERATED 标记包裹）：
 - 概念卡 A:B:C 分布
 - 总结文档类型分布
 

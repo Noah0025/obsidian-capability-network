@@ -50,16 +50,20 @@ TEMPLATES  = $VAULT/Templates         # 模板目录
 **先尝试文字提取**：
 ```bash
 pdftotext "file.pdf" - 2>/dev/null | head -100
+echo "EXIT:$?"
 ```
-- 有实质内容 → 直接用
-- 空或乱码 → 扫描件，进入 OCR
-- "encrypted" / "permission" → 标记加密，仅用文件名
+退出码判断：
+- 输出有实质内容 → 直接用
+- 输出为空或乱码，退出码 0 → 扫描件，进入 OCR
+- 退出码非 0，含 "encrypted"/"permission" → 标记加密，仅用文件名
+- 文件不存在（退出码 1）→ 报错退出
 
 **扫描件 OCR**（每次 10-15 页，处理完立即删临时文件）：
 ```bash
-pdftoppm -r 150 -f <start> -l <end> "file.pdf" /tmp/ocr_tmp
-for f in /tmp/ocr_tmp-*.ppm; do ocr_tool "$f" 2>/dev/null; echo "---"; done
-rm -f /tmp/ocr_tmp-*.ppm
+OCR_TMP=$(mktemp -d)
+pdftoppm -r 150 -f <start> -l <end> "file.pdf" "$OCR_TMP/page"
+for f in "$OCR_TMP"/page-*.ppm; do ocr_tool "$f" 2>/dev/null; echo "---"; done
+rm -rf "$OCR_TMP"
 ```
 
 优先处理目录页（前 5-15 页）获取章节结构。
@@ -157,7 +161,12 @@ aliases:
 
 ## Step 5 — 输出报告
 
+报告首行必须输出结构化字段，供 obsidian-workflow 解析：
+
 ```
+DOC_NAME: <总结文档名（不含.md）>
+DOC_PATH: <总结文档完整路径>
+
 # Ingest Report: <来源名>
 路径：<path>
 日期：YYYY-MM-DD
@@ -289,7 +298,13 @@ status: active
 
 ## Step P4 — 输出报告
 
+单篇时首行输出结构化字段；批量时每篇一组：
+
 ```
+DOC_NAME: <Paper文档名（不含.md）>
+DOC_PATH: <完整路径>
+# 批量时重复上述两行，每篇一组
+
 # Paper Ingest Report
 日期：YYYY-MM-DD
 

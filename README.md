@@ -113,7 +113,19 @@ Claude 会：
 
 ## 依赖
 
+**必须**
 - [Obsidian](https://obsidian.md)
 - [Claude Code](https://claude.ai/code)（运行 skill 需要）
-- `pdftotext`（PDF 文字提取，`brew install poppler`）
-- `pdftoppm` + OCR 工具（扫描件处理，可选）
+- `pdftotext` + `pdftoppm`：PDF 处理
+  ```bash
+  brew install poppler        # macOS
+  sudo apt install poppler-utils  # Linux
+  ```
+
+**可选（扫描件 OCR）**
+- 任意 OCR 命令行工具，放到 PATH 下（`tesseract` 推荐）：
+  ```bash
+  brew install tesseract      # macOS
+  sudo apt install tesseract-ocr  # Linux
+  ```
+  在 skill CONFIG 中将 `ocr_tool` 指向你的 OCR 命令。

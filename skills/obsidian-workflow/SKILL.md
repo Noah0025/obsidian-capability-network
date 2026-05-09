@@ -31,6 +31,8 @@ TEMPLATES           = $VAULT/Templates
 
 ---
 
+> **CONFIG 说明**：各 skill 的 CONFIG 块是供 Claude 解析的键值表，不是 shell 脚本。`$VAULT/Concepts` 这类写法由 Claude 在执行时展开，实际运行 bash 命令时替换为完整路径并加引号。
+
 ## Step 0 — Vault 结构检查
 
 检查 CONFIG 中所有路径是否存在：
@@ -52,11 +54,12 @@ done
 
 调用 `obsidian-ingest` skill，输入：原始资料路径。
 
-执行完毕后，从 ingest 报告中提取：
-- **生成的总结文档名**（用于后续步骤的 `$DOC_NAME`）
+执行完毕后，解析 ingest 报告中的结构化字段：
+- 读取 `DOC_NAME: <文档名>` → 作为 `$DOC_NAME` 传给后续步骤
+- 读取 `DOC_PATH: <路径>` → 验证文件实际存在
 - 新建概念卡列表（记录，最终报告用）
 
-如果 ingest 生成了多个总结文档（批量论文），对每个文档依次执行 Step 2-3，Step 4 最后统一执行一次。
+如果 ingest 输出多组 `DOC_NAME/DOC_PATH`（批量论文），对每组依次执行 Step 2-3，Step 4 最后统一执行一次。
 
 ---
 
@@ -65,7 +68,9 @@ done
 调用 `obsidian-audit` skill，输入：`$DOC_NAME`
 
 执行完毕后：
-- 若发现 ❌ Error → **暂停，列出错误，询问是否修复后继续还是跳过**
+- 若发现 ❌ Error → **暂停，列出错误，询问用户：**
+  - 选 **手动修复**：修复后运行 `/obsidian-workflow <原路径> --skip-ingest` 从 audit 续跑
+  - 选 **忽略继续**：记录 Error，继续执行后续步骤
 - 若只有 ⚠️ Warning → 记录，自动继续
 - 若全部 ✅ → 直接继续
 
@@ -120,9 +125,10 @@ Field：[[Field名]]（更新 / 新建）
 
 | 参数 | 效果 |
 |------|------|
+| `--skip-ingest` | 跳过 Step 1（需手动指定 `DOC_NAME=<文档名>`，用于 audit Error 修复后续跑） |
 | `--skip-audit` | 跳过 Step 2 |
 | `--skip-field` | 跳过 Step 3 |
 | `--skip-overview` | 跳过 Step 4 |
-| `--ingest-only` | 只执行 Step 1 |
 
-例：`/obsidian-workflow /path/to/pdf --skip-overview`
+例：修复 audit Error 后续跑：`/obsidian-workflow <原路径> --skip-ingest`
+例：只更新 Field 和 Overview：`/obsidian-workflow <路径> --skip-audit`
