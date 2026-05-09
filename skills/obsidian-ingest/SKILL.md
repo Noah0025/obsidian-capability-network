@@ -30,14 +30,18 @@ TEMPLATES  = $VAULT/Templates         # 模板目录
 
 | 判断条件 | 类型 | 输出目录 | 命名规则 |
 |---------|------|---------|---------|
-| 路径是单个 `.pdf` 文件 | **Paper** | `$ARTICLES` | `Paper_AuthorYear_Keyword` |
+| 路径是单个 `.pdf` 文件 | **Paper** | `$ARTICLES` | `Paper_<FirstAuthor><YYYY>_<Keyword>` |
 | 文件夹内只有论文 PDF（无课件/PPT/多章节结构） | **Paper** | `$ARTICLES` | 同上，逐篇处理 |
-| 路径含 `Masterarbeit` / `毕业设计` / `本科设计` / `thesis` | **Thesis** | `$THESIS` | `Thesis_Degree_School` |
-| 路径含 `实习` / `internship` | **Internship** | `$INTERNSHIP` | `Internship_Org_Year` |
-| 路径含 `课程设计` / `Projekt` / `project` | **Project** | `$PROJECTS` | `Proj_ProjectName` |
-| 路径含 `实验` / `lab` | **Lab** | `$LABS` | `Lab_LabName` |
-| 路径在课程资料目录下 | **Course** | `$COURSES` | `Course_CourseName` |
+| 路径含 `thesis` / `毕业设计` / `dissertation` | **Thesis** | `$THESIS` | `Thesis_<Degree>_<YYYY>` |
+| 路径含 `intern` / `实习` | **Internship** | `$INTERNSHIP` | `Intern_<Org>_<YYYY>` |
+| 路径含 `project` / `proj` | **Project** | `$PROJECTS` | `Proj_<Name>` |
 | 以上均不匹配 | 提示用户确认类型 | — | — |
+
+**概念卡命名**（Claude 生成时遵循）：
+- Concept/A：`A_<ConceptName>`，如 `A_Neural_Networks`
+- Concept/B：`B_<ConceptName>`，如 `B_Backpropagation`
+- Concept/C：`C_<ConceptName>`，如 `C_Chain_Rule`
+- 单词用 `_` 连接，默认英文，首字母大写
 
 4. 检查对应总结文档是否已存在 → 已存在则切换**补充模式**（只补概念卡和缺失章节）。
 

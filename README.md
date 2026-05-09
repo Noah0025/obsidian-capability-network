@@ -94,11 +94,35 @@ Claude 会：
 | 模板 | 适用场景 |
 |------|---------|
 | `overview.md` | 整个学科或专业的俯视图 |
-| `field.md` | 某个专业方向（如"流体力学"、"机器学习"） |
-| `summary.md` | 一门课 / 一篇论文 / 一个项目 / 实习 / 毕业论文 |
-| `concept_a.md` | 多个机制的集合（如"神经网络训练方法"） |
-| `concept_b.md` | 完整机制（如"反向传播算法"） |
-| `concept_c.md` | 单个公式或规则（如"链式法则"） |
+| `field.md` | 某个专业方向（如 Machine Learning、Hydrology） |
+| `summary.md` | 一篇论文 / 一个项目 / 实习 / 毕业论文 |
+| `concept_a.md` | 多个机制的集合（如 Neural Networks） |
+| `concept_b.md` | 完整机制（如 Backpropagation） |
+| `concept_c.md` | 单个公式或规则（如 Chain Rule） |
+
+---
+
+## 命名规范
+
+单词用 `_` 连接，默认英文，不含空格和特殊字符。
+
+| 层级 | 格式 | 示例 |
+|------|------|------|
+| Overview | `Overview_<Name>` | `Overview_Computer_Science` |
+| Field | `Field_<Name>` | `Field_Machine_Learning` |
+| Summary | `<Type>_<Name>_<YYYY>` | `Paper_Smith2024_UrbanFlood` |
+| Concept/A | `A_<Name>` | `A_Neural_Networks` |
+| Concept/B | `B_<Name>` | `B_Backpropagation` |
+| Concept/C | `C_<Name>` | `C_Chain_Rule` |
+
+Summary 的 `<Type>` 前缀：
+
+| 来源 | 前缀 | 示例 |
+|------|------|------|
+| 论文 | `Paper` | `Paper_Smith2024_UrbanFlood` |
+| 毕业论文 | `Thesis` | `Thesis_MSc_2025` |
+| 项目 | `Proj` | `Proj_Water_Quality` |
+| 实习 | `Intern` | `Intern_KWB_2024` |
 
 ---
 
