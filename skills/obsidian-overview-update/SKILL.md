@@ -13,9 +13,11 @@ description: 读取所有 Field 文档，重新计算量化指标，更新全部
 
 ```
 VAULT      = /path/to/your/obsidian/vault
+CONCEPTS   = $VAULT/Concepts
+SOURCES    = $VAULT/Sources
 FIELDS     = $VAULT/Fields
 OVERVIEWS  = $VAULT/Overviews
-CONCEPTS   = $VAULT/Concepts
+TEMPLATES  = $VAULT/Templates
 ```
 
 ---
@@ -33,10 +35,8 @@ CONCEPTS   = $VAULT/Concepts
    grep -rl "Concept/A" "$CONCEPTS" | wc -l
    grep -rl "Concept/B" "$CONCEPTS" | wc -l
    grep -rl "Concept/C" "$CONCEPTS" | wc -l
-   # 总结文档数（按类型）
-   grep -rl "Summary/Course" "$VAULT" | wc -l
-   grep -rl "Summary/Paper" "$VAULT" | wc -l
-   # ... 其他类型
+   # 总结文档数（按 source_type 通用扫描）
+   grep -rhoE "Summary/[A-Za-z_]+" "$VAULT" | sort | uniq -c
    ```
 
 ---

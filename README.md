@@ -1,8 +1,13 @@
 # obsidian-capability-network
 
-把 Claude 当作知识整理引擎的 Obsidian 工作流。
+用 AI 把原始资料转成结构化能力网络的 Obsidian 工作流。
 
-喂给它原始资料（PDF、笔记、论文），它帮你建结构化的知识网络。
+喂给它 PDF / 笔记 / 文档，它生成 wikilink 互联的概念卡 + 总结，写回你的 vault。
+
+---
+
+> 📖 **本 README**：写给人类——解释**这是什么 / 怎么组织的 / 设计原则**
+> 🤖 **[QUICKSTART.md](QUICKSTART.md)**：写给 AI 代理——把仓库交给你的 AI 工具，让它自动完成安装、配置和首次摄入
 
 ---
 
@@ -10,9 +15,11 @@
 
 一套在 Obsidian 里运行的知识管理系统，核心思路：
 
-**原始资料 → 喂给 Claude → Claude 整理成结构化知识卡 → Obsidian 网络**
+**原始资料 → 喂给 AI → AI 整理成结构化知识卡 → Obsidian 网络**
 
-不需要手动整理笔记。你只需要决定"这个东西值得学"，Claude 负责拆解和组织。
+不需要手动整理笔记。你只需要决定"这个东西值得吸收"，AI 负责拆解和组织。
+
+兼容任何能读写本地文件的 AI 工具：Claude Code、Cursor、Cline 等。
 
 ---
 
@@ -40,50 +47,61 @@ obsidian-capability-network/
 ├── templates/
 │   ├── overview.md       # Level 1 — 全局地图
 │   ├── field.md          # Level 2 — 领域地图
-│   ├── summary.md        # Level 3 — 来源总结（课程/论文/项目/实习/论文）
+│   ├── summary.md        # Level 3 — 来源总结
 │   ├── concept_a.md      # Level 4 — 主题卡
 │   ├── concept_b.md      # Level 5 — 机制卡
-│   └── concept_c.md      # Level 6 — 原子卡
+│   ├── concept_c.md      # Level 6 — 原子卡
+│   ├── log.md            # 摄入日志（按时间，自动维护）
+│   └── index.md          # 知识地图（按主题，自动维护）
 ├── skills/
-│   └── obsidian-ingest/
-│       └── SKILL.md      # Claude Code skill：自动摄入原始资料
+│   ├── obsidian-ingest/           # 摄入器
+│   ├── obsidian-audit/            # 健康检查
+│   ├── obsidian-field-update/     # Field 同步
+│   ├── obsidian-overview-update/  # Overview 同步
+│   └── obsidian-workflow/         # 编排器（串联前 4 个）
+├── QUICKSTART.md         # 5 分钟跑通指南
+├── vault-config.example.md  # vault 路径/命名配置模板（按 AI 工具放到对应位置）
 └── README.md
 ```
 
 ---
 
-## 快速开始
-
-### 1. 配置路径
-
-把你的 Obsidian vault 路径填入 `skills/obsidian-ingest/SKILL.md` 顶部的 CONFIG 块：
+## 工作流（9 步）
 
 ```
-VAULT      = /path/to/your/vault
-CONCEPTS   = $VAULT/Concepts
-COURSES    = $VAULT/Courses
-...
+01-02  判断资料类型 + 提取文档内容
+03     检查是否已有相关概念卡（新建 / 补充 / 跳过）
+04     生成概念卡（A 主题 / B 机制 / C 原子）
+05     生成总结文档（统一进 Sources/<source_type>/）
+06     更新 log.md（按时间）+ index.md（按主题）
+07     更新 Field 文档
+08     更新 Overview 文档
+09     周期性健康检查（断链 / 孤立卡 / 结构不合规）
 ```
 
-或者直接写进你项目的 `CLAUDE.md`，Claude 会自动读取。
-
-### 2. 安装模板
-
-把 `templates/` 里的文件复制到你 Obsidian vault 的 Templates 文件夹。
-
-### 3. 摄入资料
-
-在 Claude Code 里运行：
+入口指令（装好后）：
 
 ```
-/obsidian-ingest /path/to/your/materials
+/obsidian-workflow /path/to/your/material
 ```
 
-Claude 会：
-- 判断资料类型（课程 / 论文 / 项目 / 实习 / 毕业论文）
-- 提取内容，生成概念卡（B/C 级）
-- 生成总结文档，链接相关概念
-- 输出摄入报告
+---
+
+## 开始使用
+
+把这个仓库交给你的 AI 工具（Claude Code / Cursor / Cline / Codex / 其他），然后说：
+
+> "Read QUICKSTART.md and set this up for me."
+
+AI 会引导你完成：
+1. 检查依赖（poppler / OCR 工具）
+2. 询问你的 vault 路径
+3. 创建必要的目录结构
+4. 安装模板和 skill
+5. 按你的 AI 工具放置配置文件
+6. 跑一次测试摄入验证
+
+整个过程你只需要回答 1-2 个问题，剩下的 AI 自己处理。
 
 ---
 
@@ -93,12 +111,14 @@ Claude 会：
 
 | 模板 | 适用场景 |
 |------|---------|
-| `overview.md` | 整个学科或专业的俯视图 |
-| `field.md` | 某个专业方向（如 Machine Learning、Hydrology） |
-| `summary.md` | 一篇论文 / 一个项目 / 实习 / 毕业论文 |
-| `concept_a.md` | 多个机制的集合（如 Neural Networks） |
-| `concept_b.md` | 完整机制（如 Backpropagation） |
-| `concept_c.md` | 单个公式或规则（如 Chain Rule） |
+| `overview.md` | 整张知识地图的俯视图 |
+| `field.md` | 某个领域或方向 |
+| `summary.md` | 一份来源（课程 / 论文 / 项目 / 实习 / 毕业论文 / 其他） |
+| `concept_a.md` | 视角卡：串联多个机制的主题 |
+| `concept_b.md` | 知识单元：完整机制 / 方法 |
+| `concept_c.md` | 原子卡：单个公式 / 规则 / 断言 |
+| `log.md` | 摄入日志（按时间，自动维护，不需手填） |
+| `index.md` | 知识地图（按主题/source_type 分组，自动维护，作为大 vault 的导航入口） |
 
 ---
 
@@ -108,9 +128,9 @@ Claude 会：
 
 | 层级 | 格式 | 示例 |
 |------|------|------|
-| Overview | `Overview_<Name>` | `Overview_Computer_Science` |
-| Field | `Field_<Name>` | `Field_Machine_Learning` |
-| Summary | `<Type>_<Name>_<YYYY>` | `Paper_Smith2024_UrbanFlood` |
+| Overview | `Overview_<Name>` | `Overview_Research` |
+| Field | `Field_<Name>` | `Field_Statistics` |
+| Summary | `<Type>_<Name>_<YYYY>` | `Paper_Smith2024_Keyword` |
 | Concept/A | `A_<Name>` | `A_Neural_Networks` |
 | Concept/B | `B_<Name>` | `B_Backpropagation` |
 | Concept/C | `C_<Name>` | `C_Chain_Rule` |
@@ -119,37 +139,24 @@ Summary 的 `<Type>` 前缀：
 
 | 来源 | 前缀 | 示例 |
 |------|------|------|
-| 论文 | `Paper` | `Paper_Smith2024_UrbanFlood` |
-| 毕业论文 | `Thesis` | `Thesis_MSc_2025` |
-| 项目 | `Proj` | `Proj_Water_Quality` |
-| 实习 | `Intern` | `Intern_KWB_2024` |
+| 论文 | `Paper` | `Paper_Smith2024_Keyword` |
+| 其他 | 任意前缀或自定义 | `Report_Q1_2026`、`Meeting_Kickoff`、`0217_Course_Name` |
 
 ---
 
 ## 设计原则
 
-- **喂进去，不是整理进去**：原始资料不需要预处理，Claude 负责理解和拆解
+- **喂进去，不是整理进去**：原始资料不需要预处理，AI 负责理解和拆解
 - **链接重于层级**：`[[wikilink]]` 让知识网络化，不只是树状结构
 - **只建有价值的卡**：纯叙述、常识、操作步骤不建卡，降低维护负担
-- **同一概念一张卡**：多门课涉及同一概念，在一张卡里记录不同视角，不重复建卡
+- **同一概念一张卡**：多个来源涉及同一概念，在一张卡里记录不同视角，不重复建卡
+- **source_type 是开放字段**：学生用 paper/course/project，团队用 report/meeting/customer_call，工具不预设，按你的场景自由扩展
 
 ---
 
-## 依赖
+## 依赖（详细安装见 QUICKSTART）
 
-**必须**
-- [Obsidian](https://obsidian.md)
-- [Claude Code](https://claude.ai/code)（运行 skill 需要）
-- `pdftotext` + `pdftoppm`：PDF 处理
-  ```bash
-  brew install poppler        # macOS
-  sudo apt install poppler-utils  # Linux
-  ```
-
-**可选（扫描件 OCR）**
-- 任意 OCR 命令行工具，放到 PATH 下（`tesseract` 推荐）：
-  ```bash
-  brew install tesseract      # macOS
-  sudo apt install tesseract-ocr  # Linux
-  ```
-  在 skill CONFIG 中将 `ocr_tool` 指向你的 OCR 命令。
+- [Obsidian](https://obsidian.md/)
+- 一个能读写本地文件的 AI 工具，任选其一：Claude Code / Cursor / Cline / Codex 等
+- `pdftotext` + `pdftoppm`（PDF 处理，`brew install poppler` 或 `apt install poppler-utils`）
+- 可选 OCR 工具：`tesseract`（处理扫描件）

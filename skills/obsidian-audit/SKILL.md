@@ -17,9 +17,7 @@ CONCEPTS   = $VAULT/Concepts
 FIELDS     = $VAULT/Fields
 OVERVIEWS  = $VAULT/Overviews
 TEMPLATES  = $VAULT/Templates
-
-# 总结文档所在的目录列表（audit 会在这些目录中搜索文档）
-SUMMARY_DIRS = $VAULT/Courses $VAULT/Labs $VAULT/Projects $VAULT/Thesis $VAULT/Internship $VAULT/Articles
+SOURCES    = $VAULT/Sources           # 总结文档根目录（含任意子目录）
 ```
 
 ---
@@ -35,9 +33,9 @@ SUMMARY_DIRS = $VAULT/Courses $VAULT/Labs $VAULT/Projects $VAULT/Thesis $VAULT/I
 
 ## Step S1 — 定位与读取
 
-1. 在 `$SUMMARY_DIRS` 中搜索文件名匹配的 `.md` 文件。
-2. 读取全文，确定文档类型（Course / Lab / Project / Internship / Thesis / Paper）。
-3. 读取对应模板（`$TEMPLATES/` 下）。
+1. 在 `$SOURCES/` 下递归搜索文件名匹配的 `.md` 文件。
+2. 读取全文，从 frontmatter 的 `source_type` 字段确定文档类型（开放字段，如 `paper`/`course`/`report`/`meeting`/...）。
+3. 读取对应模板（`$TEMPLATES/summary.md`）。
 
 ---
 

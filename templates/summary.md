@@ -1,7 +1,7 @@
 ---
 tags:
-  - Summary        # 替换为具体类型：Summary/Course | Summary/Paper | Summary/Thesis | Summary/Project | Summary/Internship
-source_type:       # course | paper | thesis | project | internship | other
+  - Summary        # 替换为具体类型，如 Summary/Paper、Summary/Course、Summary/Report —— 与 source_type 大小写一致
+source_type:       # 开放字段：paper / course / report / meeting / customer_call / ... 任意命名
 date:
 status: active     # active | archived
 ---
@@ -33,11 +33,11 @@ status: active     # active | archived
 
 ---
 
-## 对我的价值
+## 应用价值
 
 - [ ] {{可借鉴的方法或框架}}
 - [ ] {{可复用的数据或工具}}
-- [ ] {{对研究/工作的直接支撑}}
+- [ ] {{对当前工作/场景的直接支撑}}
 
 ---
 

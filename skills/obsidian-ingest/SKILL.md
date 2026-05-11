@@ -1,3 +1,8 @@
+---
+name: obsidian-ingest
+description: 从一个路径摄入原始资料（PDF / 课件 / 笔记），自动判断 source_type，生成对应概念卡 + 总结文档，更新 log.md 和 index.md。用法：/obsidian-ingest <路径> [--type=<source_type>]
+---
+
 # Obsidian Ingest（材料摄入）
 
 输入一个路径，自动判断资料类型，生成对应的概念卡和总结文档。完成后输出摄入报告。
@@ -9,14 +14,15 @@
 ```
 VAULT      = /path/to/your/obsidian/vault
 CONCEPTS   = $VAULT/Concepts          # 概念卡根目录
-COURSES    = $VAULT/Courses           # 课程总结目录
-LABS       = $VAULT/Labs              # 实验记录目录
-PROJECTS   = $VAULT/Projects          # 课程项目目录
-THESIS     = $VAULT/Thesis            # 论文目录
-INTERNSHIP = $VAULT/Internship        # 实习目录
-ARTICLES   = $VAULT/Articles          # 论文/文章目录
+SOURCES    = $VAULT/Sources           # 总结文档目录（默认按 source_type 自动分子目录）
+FIELDS     = $VAULT/Fields            # 领域文档（供 ingest 引用 wikilink）
+OVERVIEWS  = $VAULT/Overviews         # 全局视图（供 ingest 引用 wikilink）
 TEMPLATES  = $VAULT/Templates         # 模板目录
+LOG        = $VAULT/log.md            # 摄入日志（自动维护）
+INDEX      = $VAULT/index.md          # 知识地图（自动维护）
 ```
+
+> 用户可在 `$SOURCES/` 下任意建子目录（如 `Papers/`、`Reports/`、`Meetings/`、`Customer_Calls/`），按个人/团队习惯组织。本 skill 不预设子目录。
 
 > Tip: 可将此 CONFIG 块复制到 `CLAUDE.md`，让 Claude 自动读取，无需每次手动指定。
 
@@ -26,16 +32,17 @@ TEMPLATES  = $VAULT/Templates         # 模板目录
 
 1. 输入 `<path>` 为路径。若不存在，提示并退出。
 2. `ls` 盘点内容。
-3. **自动判断类型**（按优先级匹配）：
+3. **判断 source_type**（最少两种自动识别，其余由用户指定）：
 
-| 判断条件 | 类型 | 输出目录 | 命名规则 |
-|---------|------|---------|---------|
-| 路径是单个 `.pdf` 文件 | **Paper** | `$ARTICLES` | `Paper_<FirstAuthor><YYYY>_<Keyword>` |
-| 文件夹内只有论文 PDF（无课件/PPT/多章节结构） | **Paper** | `$ARTICLES` | 同上，逐篇处理 |
-| 路径含 `thesis` / `毕业设计` / `dissertation` | **Thesis** | `$THESIS` | `Thesis_<Degree>_<YYYY>` |
-| 路径含 `intern` / `实习` | **Internship** | `$INTERNSHIP` | `Intern_<Org>_<YYYY>` |
-| 路径含 `project` / `proj` | **Project** | `$PROJECTS` | `Proj_<Name>` |
-| 以上均不匹配 | 提示用户确认类型 | — | — |
+| 判断条件 | source_type | 命名建议 |
+|---------|------|---------|
+| 路径是单个 `.pdf` 文件，PDF 内能识别出 DOI / Abstract / 多作者结构 | **paper** | `Paper_<FirstAuthor><YYYY>_<Keyword>` |
+| 文件夹内全是论文 PDF（无课件/多章节） | **paper**（逐篇处理） | 同上 |
+| 其他情况 | 由用户在调用时指定 `--type=<任意名>`，或由 Claude 从内容推断（如 `course`/`report`/`meeting`/`customer_call` 等） | `<Type>_<Name>` 或用户自定义 |
+
+> 不预设固定类型清单，`source_type` 是开放字段。用户既可以用常见词（course/paper/project），也可以根据自己场景定义新词（report/meeting/spec/customer_interview…）。
+
+**输出目录**：统一放在 `$SOURCES/<source_type>/`（首次出现的 type 自动创建子目录）；用户也可以预先在 `$SOURCES/` 下手建好子目录，本 skill 会沿用现有结构。
 
 **概念卡命名**（Claude 生成时遵循）：
 - Concept/A：`A_<ConceptName>`，如 `A_Neural_Networks`
@@ -163,7 +170,46 @@ aliases:
 
 ---
 
-## Step 5 — 输出报告
+## Step 5 — 更新 Log 与 Index
+
+### 5a. 追加 Log（按时间）
+
+在 `$LOG`（默认 `$VAULT/log.md`）记录本次摄入，作为审计日志。
+
+1. 若 `$LOG` 不存在 → 从 `$TEMPLATES/log.md` 复制创建。
+2. 读取 `$LOG`，检查是否有 `## YYYY-MM`（当月）段落：
+   - **没有** → 在 `# Ingest Log` 标题之后、第一个现有 `## YYYY-MM` 之前插入新月份段落（含表头）。
+   - **有** → 直接进入下一步。
+3. 在当月表格末尾追加一行：
+
+```
+| <YYYY-MM-DD> | <资料名> | <类型> | +N (A:N B:N C:N) | +N | [[<总结文档名>]] |
+```
+
+字段定义：
+- 资料名：原始文件名或文件夹名（不含路径）
+- 类型：Step 0 判定的 `source_type`（开放字段，常见值 `paper`/`course`/`report`/`meeting`/...）
+- 新建卡：本次 Step 3 新建的概念卡数量（按 A/B/C 分别计）
+- 补充卡：本次 Step 2 补入「各来源应用」的卡数量
+- 总结文档：本次 Step 4 生成的 wikilink
+
+### 5b. 更新 Index（按主题）
+
+在 `$INDEX`（默认 `$VAULT/index.md`）登记本次新增的总结文档，作为知识地图入口（当 vault 大到记不住时的导航）。
+
+1. 若 `$INDEX` 不存在 → 从 `$TEMPLATES/index.md` 复制创建。
+2. 读取 `$INDEX`，定位 `## <source_type>` 章节：
+   - **找到** → 在该章节末尾追加一行：`- [[<总结文档名>]] — <TL;DR 第一句>`
+   - **未找到** → 在文档末尾插入新章节 `## <source_type>` + 同样一行
+3. **补充模式**（Step 4 状态为"补充"）：若该 wikilink 已在 index 中，则不重复追加；若 TL;DR 有更新，替换原描述。
+
+**TL;DR 第一句**：从本次生成的总结文档 `## TL;DR` 章节取第一个句号前的内容（最多 80 字符，超出截断加 "…"）。
+
+**容错**：5a 或 5b 任一写入失败，记录到报告 `## 警告` 节并继续，不中断流程。
+
+---
+
+## Step 6 — 输出报告
 
 报告首行必须输出结构化字段，供 obsidian-workflow 解析：
 
@@ -219,9 +265,9 @@ DOC_PATH: <总结文档完整路径>
 - **Abstract**
 - **关键词**（Keywords）
 
-确定命名：`Paper_FirstAuthorYear_Keyword`（如 `Paper_Smith2024_UrbanFlood`）。
+确定命名：`Paper_FirstAuthorYear_Keyword`（如 `Paper_Smith2024_Keyword`）。
 
-检查 `$ARTICLES/` 中是否已存在同名文件 → 已存在则切换补充模式。
+检查 `$SOURCES/paper/` 中是否已存在同名文件 → 已存在则切换补充模式。
 
 ---
 
@@ -245,12 +291,13 @@ DOC_PATH: <总结文档完整路径>
 
 ## Step P3 — 生成 Paper 总结卡
 
-参照 `templates/summary.md`（source_type: paper），放入 `$ARTICLES/`：
+参照 `templates/summary.md`（source_type: paper），放入 `$SOURCES/paper/`：
 
 ```markdown
 ---
 tags:
   - Summary/Paper
+source_type: paper
 citation_key: AuthorYear
 doi: <DOI>
 date: YYYY
@@ -281,7 +328,7 @@ status: active
 
 3-5 条带数值的关键结论。
 
-## 对我的价值
+## 应用价值
 
 - [ ] 方法可借鉴 — ...
 - [ ] 数据可复用 — ...
@@ -300,7 +347,14 @@ status: active
 
 ---
 
-## Step P4 — 输出报告
+## Step P4 — 更新 Log 与 Index
+
+对每篇 Paper（批量时逐篇）执行与课程模式 Step 5 相同的 Log 追加 + Index 更新（见前文 5a/5b）。
+`source_type` 字段填 `paper`。
+
+---
+
+## Step P5 — 输出报告
 
 单篇时首行输出结构化字段；批量时每篇一组：
 

@@ -12,8 +12,11 @@ description: 根据新增/更新的总结文档，自动更新或新建 Field �
 ## CONFIG（使用前修改，或写入 CLAUDE.md）
 
 ```
-VAULT   = /path/to/your/obsidian/vault
-FIELDS  = $VAULT/Fields
+VAULT      = /path/to/your/obsidian/vault
+CONCEPTS   = $VAULT/Concepts
+SOURCES    = $VAULT/Sources
+FIELDS     = $VAULT/Fields
+TEMPLATES  = $VAULT/Templates
 ```
 
 ---
@@ -30,7 +33,7 @@ FIELDS  = $VAULT/Fields
 
 ## Step 1 — 匹配 Field
 
-1. 读取 `$FIELDS/` 下所有 Field 文档的文件名和 `## 课程与知识体系` 章节。
+1. 读取 `$FIELDS/` 下所有 Field 文档的文件名和 `## 知识来源` 章节。
 2. 匹配逻辑（按优先级）：
    - 总结文档已被某 Field 的 **真实链接** 引用 → 该 Field（已覆盖，检查是否需要更新）
    - 总结文档的概念卡与某 Field 引用的概念卡有 ≥3 个交集 → 该 Field
@@ -47,7 +50,7 @@ FIELDS  = $VAULT/Fields
 
 读取匹配到的 Field 全文，依次检查并更新：
 
-### 2a. 课程与知识体系
+### 2a. 知识来源
 - 检查 `[[总结文档名]]` 是否已在该章节中
 - 未引用 → 在合适位置插入（按学习顺序排列）
 - 附简短描述（从总结文档一句话定义提取）
@@ -73,7 +76,7 @@ FIELDS  = $VAULT/Fields
 2. 检查 `$FIELDS/` 下是否已存在同名文件 → 存在则切换为更新模式，不重复创建
 3. 按 `$TEMPLATES/field.md` 创建，包含：
    - 领域范围（从总结文档内容推断）
-   - 课程与知识体系（当前只有这一个来源，写成可扩展的叙述）
+   - 知识来源（当前只有这一个来源，写成可扩展的叙述）
    - 能力地图（从总结文档核心能力提取）
    - 跨领域关联（从总结文档引用的其他领域内容推断）
    - 相关（**真实链接** 含新总结文档）
@@ -91,7 +94,7 @@ FIELDS  = $VAULT/Fields
 Field：<Field 名>（匹配方式：已引用 / 概念交集 / 关键词 / 新建）
 
 ## 更新内容
-- 课程与知识体系：补入 [[文档名]]
+- 知识来源：补入 [[文档名]]
 - 能力地图：补入 N 项
 - 跨领域关联：补入 N 条
 - 真实链接：补入 [[文档名]]

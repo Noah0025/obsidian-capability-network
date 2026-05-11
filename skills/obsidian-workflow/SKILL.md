@@ -16,17 +16,14 @@ vault-check → ingest → audit → field-update → overview-update
 ## CONFIG（使用前修改，或写入 CLAUDE.md）
 
 ```
-VAULT               = /path/to/your/obsidian/vault
-CONCEPTS            = $VAULT/Concepts
-COURSES             = $VAULT/Courses
-LABS                = $VAULT/Labs
-PROJECTS            = $VAULT/Projects
-THESIS              = $VAULT/Thesis
-INTERNSHIP          = $VAULT/Internship
-ARTICLES            = $VAULT/Articles
-FIELDS              = $VAULT/Fields
-OVERVIEWS           = $VAULT/Overviews
-TEMPLATES           = $VAULT/Templates
+VAULT       = /path/to/your/obsidian/vault
+CONCEPTS    = $VAULT/Concepts
+SOURCES     = $VAULT/Sources
+FIELDS      = $VAULT/Fields
+OVERVIEWS   = $VAULT/Overviews
+TEMPLATES   = $VAULT/Templates
+LOG         = $VAULT/log.md
+INDEX       = $VAULT/index.md
 ```
 
 ---
@@ -38,7 +35,7 @@ TEMPLATES           = $VAULT/Templates
 检查 CONFIG 中所有路径是否存在：
 
 ```bash
-for dir in $CONCEPTS $COURSES $LABS $PROJECTS $THESIS $INTERNSHIP $ARTICLES $FIELDS $OVERVIEWS $TEMPLATES; do
+for dir in $CONCEPTS $SOURCES $FIELDS $OVERVIEWS $TEMPLATES; do
   [ -d "$dir" ] || echo "MISSING: $dir"
 done
 ```
@@ -125,10 +122,20 @@ Field：[[Field名]]（更新 / 新建）
 
 | 参数 | 效果 |
 |------|------|
-| `--skip-ingest` | 跳过 Step 1（需手动指定 `DOC_NAME=<文档名>`，用于 audit Error 修复后续跑） |
+| `--skip-ingest` | 跳过 Step 1（需通过 `--doc-name=<文档名>` 显式指定要审查的总结文档） |
 | `--skip-audit` | 跳过 Step 2 |
 | `--skip-field` | 跳过 Step 3 |
 | `--skip-overview` | 跳过 Step 4 |
 
-例：修复 audit Error 后续跑：`/obsidian-workflow <原路径> --skip-ingest`
-例：只更新 Field 和 Overview：`/obsidian-workflow <路径> --skip-audit`
+示例：
+
+```
+# 修复 audit Error 后续跑
+/obsidian-workflow --skip-ingest --doc-name=Paper_Smith2024_Keyword
+
+# 只跑 Field + Overview 更新
+/obsidian-workflow --skip-ingest --skip-audit --doc-name=Paper_Smith2024_Keyword
+
+# 完整流程跳过 audit
+/obsidian-workflow /path/to/material --skip-audit
+```
