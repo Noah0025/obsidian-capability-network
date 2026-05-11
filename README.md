@@ -1,4 +1,4 @@
-# study-os
+# obsidian-capability-network
 
 把 Claude 当作知识整理引擎的 Obsidian 工作流。
 
@@ -36,7 +36,7 @@ Overview    全局知识地图（整个学科的俯视图）
 ## 文件结构
 
 ```
-study-os/
+obsidian-capability-network/
 ├── templates/
 │   ├── overview.md       # Level 1 — 全局地图
 │   ├── field.md          # Level 2 — 领域地图
