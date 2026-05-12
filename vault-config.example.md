@@ -5,7 +5,7 @@
 | 你用的 AI 工具 | 放置位置（在 vault 根目录） |
 |---|---|
 | Claude Code | 复制为 `CLAUDE.md` |
-| Cursor | 复制为 `.cursorrules` 或 `.cursor/rules/vault-config.mdc` |
+| Cursor | 复制为 `.cursor/rules/vault-config.mdc` |
 | Cline | 合并到 `.clinerules` 顶部 |
 | Codex | 合并到 `AGENTS.md` 顶部 |
 | 其他 | 调用 skill 时把这段 CONFIG 粘到 system prompt |
@@ -61,8 +61,8 @@ tags: [Concept/A]   # 或 Concept/B / Concept/C
 aliases: [跨语言术语]
 
 # Summary
-tags: [Summary/<Type>]   # Type 与 source_type 大小写匹配，如 Summary/Paper、Summary/Report
-source_type: paper       # 开放字段：paper / course / report / meeting / customer_call / ...
+tags: [Summary/<Type>]   # Type 用 TitleCase，如 Summary/Paper、Summary/Report、Summary/CustomerCall
+source_type: paper       # 开放字段，用 lowercase 下划线：paper / course / report / meeting / customer_call / ...
 date: YYYY-MM-DD
 status: active
 

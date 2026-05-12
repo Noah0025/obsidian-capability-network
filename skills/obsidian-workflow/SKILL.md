@@ -123,6 +123,7 @@ Field：[[Field名]]（更新 / 新建）
 | 参数 | 效果 |
 |------|------|
 | `--skip-ingest` | 跳过 Step 1（需通过 `--doc-name=<文档名>` 显式指定要审查的总结文档） |
+| `--ingest-only` | 等价于 `--skip-audit --skip-field --skip-overview`（只跑 Step 1）|
 | `--skip-audit` | 跳过 Step 2 |
 | `--skip-field` | 跳过 Step 3 |
 | `--skip-overview` | 跳过 Step 4 |

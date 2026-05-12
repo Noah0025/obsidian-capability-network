@@ -22,7 +22,7 @@ LOG        = $VAULT/log.md            # 摄入日志（自动维护）
 INDEX      = $VAULT/index.md          # 知识地图（自动维护）
 ```
 
-> 用户可在 `$SOURCES/` 下任意建子目录（如 `Papers/`、`Reports/`、`Meetings/`、`Customer_Calls/`），按个人/团队习惯组织。本 skill 不预设子目录。
+> 用户可在 `$SOURCES/` 下任意建子目录（如 `paper/`、`report/`、`meeting/`、`customer_call/`，小写下划线），按个人/团队习惯组织。本 skill 不预设子目录。
 
 > Tip: 可将此 CONFIG 块复制到 `CLAUDE.md`，让 Claude 自动读取，无需每次手动指定。
 
@@ -73,7 +73,7 @@ echo "EXIT:$?"
 ```bash
 OCR_TMP=$(mktemp -d)
 pdftoppm -r 150 -f <start> -l <end> "file.pdf" "$OCR_TMP/page"
-for f in "$OCR_TMP"/page-*.ppm; do ocr_tool "$f" 2>/dev/null; echo "---"; done
+for f in "$OCR_TMP"/page-*.ppm; do tesseract "$f" stdout 2>/dev/null; echo "---"; done
 rm -rf "$OCR_TMP"
 ```
 

@@ -2,7 +2,6 @@
 tags:
   - Concept/B
 aliases:
-status:            # draft | active | deprecated
 ---
 
 # {{机制名/方法名/概念名}}

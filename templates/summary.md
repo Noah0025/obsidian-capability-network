@@ -1,7 +1,7 @@
 ---
 tags:
-  - Summary        # 替换为具体类型，如 Summary/Paper、Summary/Course、Summary/Report —— 与 source_type 大小写一致
-source_type:       # 开放字段：paper / course / report / meeting / customer_call / ... 任意命名
+  - Summary        # 替换为具体类型，Type 用 TitleCase：Summary/Paper、Summary/Course、Summary/CustomerCall
+source_type:       # 开放字段，用 lowercase 下划线：paper / course / report / meeting / customer_call / ...
 date:
 status: active     # active | archived
 ---

@@ -2,7 +2,6 @@
 tags:
   - Concept/A
 aliases:
-status:            # draft | active | deprecated
 ---
 
 # {{主题名}}

@@ -29,7 +29,7 @@ If unclear (e.g., you don't have a cwd concept), ask user:
 
 > "What's the absolute path to the obsidian-capability-network repo you just cloned/downloaded?"
 
-Verify: `[ -f "$REPO_PATH/QUICKSTART.md" ] || echo ERROR` should print nothing.
+Verify: `[ -f "$REPO_PATH"/QUICKSTART.md ] || echo ERROR` should print nothing.
 
 ---
 
@@ -91,7 +91,7 @@ Verify all 5 directories exist after.
 Copy all 8 template files from this repo into the user's vault.
 
 ```bash
-cp $REPO_PATH/templates/*.md "$VAULT_PATH/Templates/"
+cp "$REPO_PATH"/templates/*.md "$VAULT_PATH/Templates/"
 ```
 
 Verify: `ls "$VAULT_PATH/Templates/"` should show `overview.md`, `field.md`, `summary.md`, `concept_a.md`, `concept_b.md`, `concept_c.md`, `log.md`, `index.md`.
@@ -106,7 +106,7 @@ Branch by detected `tool`:
 
 ```bash
 mkdir -p ~/.claude/skills
-cp -r $REPO_PATH/skills/* ~/.claude/skills/
+cp -r "$REPO_PATH"/skills/* ~/.claude/skills/
 ```
 
 Verify: `ls ~/.claude/skills/` shows `obsidian-ingest`, `obsidian-audit`, `obsidian-field-update`, `obsidian-overview-update`, `obsidian-workflow`.
@@ -119,7 +119,7 @@ Cursor auto-loads `.mdc` files from `.cursor/rules/` in the workspace root. Conv
 
 ```bash
 mkdir -p "$VAULT_PATH/.cursor/rules"
-for skill_dir in $REPO_PATH/skills/*/; do
+for skill_dir in "$REPO_PATH"/skills/*/; do
   skill_name=$(basename "$skill_dir")
   out="$VAULT_PATH/.cursor/rules/${skill_name}.mdc"
   # Prepend Cursor rule frontmatter to the SKILL.md body
@@ -145,7 +145,7 @@ Cline reads a single `.clinerules` file from the workspace root. Concatenate all
 ```bash
 out="$VAULT_PATH/.clinerules"
 echo "# obsidian-capability-network · merged skills" > "$out"
-for skill_dir in $REPO_PATH/skills/*/; do
+for skill_dir in "$REPO_PATH"/skills/*/; do
   skill_name=$(basename "$skill_dir")
   echo >> "$out"
   echo "---" >> "$out"
@@ -169,7 +169,7 @@ out="$VAULT_PATH/AGENTS.md"
 echo "# obsidian-capability-network · agent instructions" > "$out"
 echo >> "$out"
 echo "Below are 5 skills. Invoke by name (e.g. /obsidian-workflow) and execute the matching section." >> "$out"
-for skill_dir in $REPO_PATH/skills/*/; do
+for skill_dir in "$REPO_PATH"/skills/*/; do
   skill_name=$(basename "$skill_dir")
   echo >> "$out"
   echo "---" >> "$out"
@@ -199,7 +199,7 @@ Branch by `tool`. In all cases, replace `VAULT = /absolute/path/to/your-vault` i
 ### tool == claude_code
 
 ```bash
-cp $REPO_PATH/vault-config.example.md "$VAULT_PATH/CLAUDE.md"
+cp "$REPO_PATH"/vault-config.example.md "$VAULT_PATH/CLAUDE.md"
 perl -pi -e "s|/absolute/path/to/your-vault|$VAULT_PATH|g" "$VAULT_PATH/CLAUDE.md"   # cross-platform
 ```
 
@@ -215,7 +215,7 @@ out="$VAULT_PATH/.cursor/rules/vault-config.mdc"
   echo "alwaysApply: true"
   echo "---"
   echo
-  cat $REPO_PATH/vault-config.example.md
+  cat "$REPO_PATH"/vault-config.example.md
 } > "$out"
 perl -pi -e "s|/absolute/path/to/your-vault|$VAULT_PATH|g" "$out"
 ```
@@ -227,7 +227,7 @@ The vault path config has already been merged into `.clinerules` as part of Task
 ```bash
 {
   echo "# === VAULT CONFIG ==="
-  cat $REPO_PATH/vault-config.example.md
+  cat "$REPO_PATH"/vault-config.example.md
   echo
   echo "---"
   cat "$VAULT_PATH/.clinerules"
@@ -243,7 +243,7 @@ Same approach as Cline — prepend CONFIG to the merged `AGENTS.md`:
 ```bash
 {
   echo "# === VAULT CONFIG ==="
-  cat $REPO_PATH/vault-config.example.md
+  cat "$REPO_PATH"/vault-config.example.md
   echo
   echo "---"
   cat "$VAULT_PATH/AGENTS.md"

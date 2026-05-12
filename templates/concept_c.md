@@ -2,7 +2,6 @@
 tags:
   - Concept/C
 aliases:
-status:            # draft | active | deprecated
 ---
 
 # {{公式名/定律名/规则名}}
