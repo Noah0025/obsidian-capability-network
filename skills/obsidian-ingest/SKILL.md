@@ -176,7 +176,7 @@ aliases:
 
 在 `$LOG`（默认 `$VAULT/log.md`）记录本次摄入，作为审计日志。
 
-1. 若 `$LOG` 不存在 → 从 `$TEMPLATES/log.md` 复制创建。
+1. 若 `$LOG` 不存在 → 从 `$TEMPLATES/log.md` 复制创建（QUICKSTART 已默认拷过，本步是兜底）。
 2. 读取 `$LOG`，检查是否有 `## YYYY-MM`（当月）段落：
    - **没有** → 在 `# Ingest Log` 标题之后、第一个现有 `## YYYY-MM` 之前插入新月份段落（含表头）。
    - **有** → 直接进入下一步。
@@ -197,7 +197,7 @@ aliases:
 
 在 `$INDEX`（默认 `$VAULT/index.md`）登记本次新增的总结文档，作为知识地图入口（当 vault 大到记不住时的导航）。
 
-1. 若 `$INDEX` 不存在 → 从 `$TEMPLATES/index.md` 复制创建。
+1. 若 `$INDEX` 不存在 → 从 `$TEMPLATES/index.md` 复制创建（QUICKSTART 已默认拷过，本步是兜底）。
 2. 读取 `$INDEX`，定位 `## <source_type>` 章节：
    - **找到** → 在该章节末尾追加一行：`- [[<总结文档名>]] — <TL;DR 第一句>`
    - **未找到** → 在文档末尾插入新章节 `## <source_type>` + 同样一行

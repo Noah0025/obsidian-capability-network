@@ -32,7 +32,7 @@ Overview    全局地图（一张知识/能力网络的俯视图）
 └── Field       领域地图（某个主题或方向）
     └── Summary     来源总结（一份资料 — 论文 / 报告 / 会议 / 课程 / 任意 source_type）
         └── Concept/A   视角卡（串联多个机制的主题）
-            └── Concept/B   机制卡（完整知识单元，5-15 分钟能读完）
+            └── Concept/B   机制卡（完整知识单元，5-15分钟能读完）
                 └── Concept/C   原子卡（单一公式 / 规则 / 断言）
 ```
 
@@ -59,9 +59,22 @@ obsidian-capability-network/
 │   ├── obsidian-field-update/     # Field 同步
 │   ├── obsidian-overview-update/  # Overview 同步
 │   └── obsidian-workflow/         # 编排器（串联前 4 个）
-├── QUICKSTART.md         # 5 分钟跑通指南
+├── QUICKSTART.md         # 约 10 分钟跑通指南（首次摄入 PDF 视长度多 3-5分钟）
 ├── vault-config.example.md  # vault 路径/命名配置模板（按 AI 工具放到对应位置）
 └── README.md
+```
+
+## Vault 安装后结构
+
+```
+your-vault/
+├── Concepts/
+├── Fields/
+├── Overviews/
+├── Sources/
+├── Templates/
+├── log.md          # 摄入日志，首次摄入时自动创建
+└── index.md        # 知识地图，首次摄入时自动创建
 ```
 
 ---
@@ -158,8 +171,10 @@ Summary 的 `<Type>` 前缀：
 
 - [Obsidian](https://obsidian.md/)
 - 一个能读写本地文件的 AI 工具，任选其一：Claude Code / Cursor / Cline / Codex 等
-- `pdftotext` + `pdftoppm`（PDF 处理，`brew install poppler` 或 `apt install poppler-utils`）
+- `pdftotext` + `pdftoppm`（PDF 处理：macOS `brew install poppler`，Linux `apt install poppler-utils`，Windows `choco install poppler` / `scoop install poppler` / 下载 https://github.com/oschwartz10612/poppler-windows）
 - 可选 OCR 工具：`tesseract`（处理扫描件）
+
+Windows 推荐使用 WSL 跑全流程。
 
 ---
 
@@ -167,7 +182,7 @@ Summary 的 `<Type>` 前缀：
 
 **给 AI agent**：把 [QUICKSTART.md](./QUICKSTART.md) 整份喂给你的 AI 代理。
 
-**给人类**：跟 QUICKSTART 一步步来，约 5 分钟。
+**给人类**：跟 QUICKSTART 一步步来，约 10 分钟（首次摄入 PDF 视长度多 3-5分钟）。
 
 ---
 

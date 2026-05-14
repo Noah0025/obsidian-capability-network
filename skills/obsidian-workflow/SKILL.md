@@ -45,6 +45,8 @@ done
   - 选 **自动创建** → `mkdir -p` 创建所有缺失目录，继续
   - 选 **手动处理** → 退出，提示用户先配置 CONFIG
 
+如果 5 个必需目录全部已存在，跳过任何输出直接进 Step 1。仅在缺失或需创建时才提示用户。
+
 ---
 
 ## Step 1 — Ingest
@@ -66,7 +68,7 @@ done
 
 执行完毕后：
 - 若发现 ❌ Error → **暂停，列出错误，询问用户：**
-  - 选 **手动修复**：修复后运行 `/obsidian-workflow <原路径> --skip-ingest` 从 audit 续跑
+  - 选 **手动修复**：修复后运行 `/obsidian-workflow --skip-ingest --doc-name=<文档名>` 从 audit 续跑
   - 选 **忽略继续**：记录 Error，继续执行后续步骤
 - 若只有 ⚠️ Warning → 记录，自动继续
 - 若全部 ✅ → 直接继续

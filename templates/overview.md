@@ -18,6 +18,10 @@ tags:
 
 ## 领域全景
 
+<!-- AUTO-GENERATED:START -->
+<!-- 由 obsidian-overview-update 自动维护，请勿手改此区块 -->
+<!-- AUTO-GENERATED:END -->
+
 {{用叙述性语言串联所有 Field 级卡，说明各领域在知识体系中的角色和相互关系。
 通过 `[[wikilink]]` 引用所有 Field 卡。}}
 

@@ -42,7 +42,8 @@ Ask:
 Save the answer as `VAULT_PATH` and export it for the rest of the session:
 
 ```bash
-read -r VAULT_PATH    # or take from user reply if running in agent mode
+# Receive the user's reply and store it in VAULT_PATH.
+# Do not run `read`; AI agents may not have stdin and can hang.
 export VAULT_PATH
 ```
 
@@ -70,7 +71,9 @@ If `pdftotext` or `pdftoppm` missing:
 
 > "PDF tools missing. Install with:
 > macOS: `brew install poppler`
-> Linux: `sudo apt install poppler-utils`"
+> Linux: `sudo apt install poppler-utils`
+> Windows: `choco install poppler` or `scoop install poppler`, or download Poppler from https://github.com/oschwartz10612/poppler-windows
+> Windows users are recommended to run the full workflow in WSL."
 
 If `tesseract` missing → just note OCR will be unavailable; don't block setup.
 
@@ -92,6 +95,8 @@ Copy all 8 template files from this repo into the user's vault.
 
 ```bash
 cp "$REPO_PATH"/templates/*.md "$VAULT_PATH/Templates/"
+cp "$REPO_PATH"/templates/log.md "$VAULT_PATH/"
+cp "$REPO_PATH"/templates/index.md "$VAULT_PATH/"
 ```
 
 Verify: `ls "$VAULT_PATH/Templates/"` should show `overview.md`, `field.md`, `summary.md`, `concept_a.md`, `concept_b.md`, `concept_c.md`, `log.md`, `index.md`.
@@ -114,6 +119,8 @@ Verify: `ls ~/.claude/skills/` shows `obsidian-ingest`, `obsidian-audit`, `obsid
 Tell user to restart Claude Code so new skills are registered.
 
 ### tool == cursor
+
+Cursor loads rules through `.cursor/rules/`, so the vault directory itself must be opened as the Cursor workspace (File → Open Folder, then select the vault path). Obsidian and Cursor can open the same directory at the same time.
 
 Cursor auto-loads `.mdc` files from `.cursor/rules/` in the workspace root. Convert each SKILL.md into a Cursor rule and place them in `$VAULT_PATH/.cursor/rules/` (so when user opens the vault as workspace, all 5 rules load automatically).
 
@@ -222,7 +229,7 @@ perl -pi -e "s|/absolute/path/to/your-vault|$VAULT_PATH|g" "$out"
 
 ### tool == cline
 
-The vault path config has already been merged into `.clinerules` as part of Task 5 (skills file). Manually add a CONFIG block at the top of `$VAULT_PATH/.clinerules`:
+Prepend a VAULT CONFIG block at the top of `$VAULT_PATH/.clinerules`:
 
 ```bash
 {
@@ -265,6 +272,8 @@ Tell user:
 Ask user:
 
 > "Setup complete. Want to test it now? If yes, paste an absolute path to a PDF you want to ingest. (Or skip and try later.)"
+
+If the user does not have a PDF on hand, suggest downloading a short paper from arXiv (for example, https://arxiv.org/abs/1706.03762).
 
 If user provides a path, save as `MATERIAL_PATH` and invoke:
 
@@ -312,6 +321,8 @@ Next:
 | `pdftotext` errors | poppler not installed | Run dependency install (Task 2) |
 | `tags: Concept/B` not parsed | Frontmatter format issue | Check template wasn't corrupted; re-copy from repo |
 | Card placed in wrong folder | Vault structure non-standard | Verify Task 3 directories exist with exact names |
+
+Re-running install: all `cp` commands overwrite same-name files. Before reinstalling, back up any custom changes under `templates` or `skills`.
 
 ---
 
