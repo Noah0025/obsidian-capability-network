@@ -160,3 +160,17 @@ Summary 的 `<Type>` 前缀：
 - 一个能读写本地文件的 AI 工具，任选其一：Claude Code / Cursor / Cline / Codex 等
 - `pdftotext` + `pdftoppm`（PDF 处理，`brew install poppler` 或 `apt install poppler-utils`）
 - 可选 OCR 工具：`tesseract`（处理扫描件）
+
+---
+
+## 安装
+
+**给 AI agent**：把 [QUICKSTART.md](./QUICKSTART.md) 整份喂给你的 AI 代理。
+
+**给人类**：跟 QUICKSTART 一步步来，约 5 分钟。
+
+---
+
+## License
+
+MIT
