@@ -44,6 +44,7 @@ Save the answer as `VAULT_PATH` and export it for the rest of the session:
 ```bash
 # Receive the user's reply and store it in VAULT_PATH.
 # Do not run `read`; AI agents may not have stdin and can hang.
+VAULT_PATH="<paste the user's absolute path here>"
 export VAULT_PATH
 ```
 

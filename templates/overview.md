@@ -18,12 +18,26 @@ tags:
 
 ## 领域全景
 
-<!-- AUTO-GENERATED:START -->
-<!-- 由 obsidian-overview-update 自动维护，请勿手改此区块 -->
-<!-- AUTO-GENERATED:END -->
-
 {{用叙述性语言串联所有 Field 级卡，说明各领域在知识体系中的角色和相互关系。
 通过 `[[wikilink]]` 引用所有 Field 卡。}}
+
+---
+
+## 量化数据
+
+<!-- AUTO-GENERATED:START — 由 obsidian-overview-update 维护，请勿手动编辑此区块 -->
+| Field | 概念卡数 | 来源数 |
+|-------|---------|--------|
+| {{Field_Name}} | 0 | 0 |
+| **总计** | **0** | **0** |
+<!-- AUTO-GENERATED:END -->
+
+**结构特征**
+
+<!-- AUTO-GENERATED:START — 由 obsidian-overview-update 维护，请勿手动编辑此区块 -->
+- 概念卡 A:B:C 分布：0 / 0 / 0
+- 总结文档类型分布：（首次摄入后填充）
+<!-- AUTO-GENERATED:END -->
 
 ---
 

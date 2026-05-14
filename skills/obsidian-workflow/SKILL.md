@@ -1,6 +1,6 @@
 ---
 name: obsidian-workflow
-description: 完整摄入流水线。输入原始资料路径，依次执行 vault 检查 → ingest → audit → field-update → overview-update。用法：/obsidian-workflow <原始资料路径> [--skip-audit] [--skip-field] [--skip-overview] [--ingest-only]
+description: 完整摄入流水线。输入原始资料路径，依次执行 vault 检查 → ingest → audit → field-update → overview-update。用法：/obsidian-workflow <原始资料路径> [--skip-audit] [--skip-field] [--skip-overview] [--ingest-only]；audit 失败后续跑：/obsidian-workflow --skip-ingest --doc-name=<文档名>
 ---
 
 # Obsidian Workflow
